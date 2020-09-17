@@ -5,11 +5,13 @@ import { preferences } from "user-settings";
 import { display } from "display";
 import { clock } from "clock";
 import { battery } from "power";
+import { locale } from "user-settings";
+import { itDays, itMonths } from "./locales/it.js";
 import { days, months } from "./locales/en.js";
 import { HeartRateSensor } from "heart-rate";
 
-
-
+/* ------ LANGUAGE CODE ------ */
+const langCode = locale['language'].split('-')[0];
 
 /* --------- CLOCK ---------- */
 const txtTime = document.getElementById("txtTime");
@@ -18,10 +20,18 @@ const txtDate = document.getElementById("txtDate");
 clock.granularity = "minutes";
 
 function updateClock(evt) {
+  let localizedDays = days;
+  let localizedMonths = months;
+  
+  if (langCode === 'it') {
+    localizedDays = itDays;
+    localizedMonths = itMonths;
+  }
+  
   let today = evt.date;
-  let dayName = days[today.getDay()];
+  let dayName = localizedDays[today.getDay()];
   let month = util.zeroPad(today.getMonth() + 1);
-  let monthName = months[today.getMonth()];
+  let monthName = localizedMonths[today.getMonth()];
   let dayNumber = util.zeroPad(today.getDate());
   let hours = today.getHours();
   if (preferences.clockDisplay === "12h") {
@@ -129,7 +139,3 @@ txtTime.onclick = function(e) {
     hrm.stop();
   }
 }
-
-
-
- 
